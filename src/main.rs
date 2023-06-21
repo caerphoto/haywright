@@ -1,12 +1,11 @@
 use core::panic;
+use rand::{thread_rng, Rng};
 use std::{
     collections::HashMap,
-    env,
-    fs,
+    env, fs,
     io::{self, Write},
-    path::Path
+    path::Path,
 };
-use rand::{thread_rng, Rng};
 
 const EXTRA_CHARS: &str = "–—“”‘’£œæéèêĊøż×";
 const EXTRA_CHARS_BASE_IDX: usize = 129;
@@ -34,9 +33,7 @@ impl Input {
     }
 
     fn from_stdin() -> Self {
-        let buf: Vec<String> = io::stdin().lines()
-            .map(|l| l.unwrap())
-            .collect();
+        let buf: Vec<String> = io::stdin().lines().map(|l| l.unwrap()).collect();
         if buf.is_empty() {
             panic!("Error: no input specified. Either supply a filename, or pipe from stdin.\nBuf: {:?}", buf);
         }
@@ -74,9 +71,9 @@ impl Input {
                         freq_table[code] += 1;
                     }
                 } else {
-                    let &freq_idx = self.char_to_idx
-                        .get(&next_char)
-                        .unwrap_or_else(|| panic!("Non-ASCII char '{next_char}' not found in index map"));
+                    let &freq_idx = self.char_to_idx.get(&next_char).unwrap_or_else(|| {
+                        panic!("Non-ASCII char '{next_char}' not found in index map")
+                    });
                     freq_table[freq_idx] += 1;
                 }
             }
