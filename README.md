@@ -34,8 +34,6 @@ generate based on a 726KB input.
 
 ## TODO:
 
-* actually write output to the given path(!)
-
 * move generator stuff into its own crate (& possibly repo?), for easier use in
   other programs
 
