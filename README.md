@@ -21,7 +21,8 @@ option. Assuming the source text is written in a natural language:
   gradually starts to build more coherent-looking sentences.
 
 * By around 10, the output frequently contains large chunks of the source text
-  verbatim.
+  verbatim. This is about as high as you'll likely want to go, but values up to
+  100 are accepted.
 
 See below for some example output.
 
