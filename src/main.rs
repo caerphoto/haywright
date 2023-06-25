@@ -8,7 +8,7 @@ use clap::Parser;
 struct Args {
 
     /// Length of sequence-matching string.
-    #[arg(short, long, default_value_t = 5, value_parser = clap::value_parser!(u32).range(1..))]
+    #[arg(short, long, default_value_t = 5, value_parser = clap::value_parser!(u32).range(1..=100))]
     sequence: usize,
 
     /// Length of output.
