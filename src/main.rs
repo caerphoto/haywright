@@ -7,21 +7,21 @@ use clap::Parser;
 #[derive(Parser)]
 struct Args {
 
-    /// Path to write output to; if omitted, will write to STDOUT
-    #[arg(short, long)]
-    output: Option<PathBuf>,
+    /// Length of sequence-matching string
+    #[arg(short, long, default_value_t = 5)]
+    sequence: usize,
 
     /// Length of output
     #[arg(short, long, default_value_t = 1000)]
     length: usize,
 
-    /// Length of sequence-matching string
-    #[arg(short, long, default_value_t = 5)]
-    sequence: usize,
-
     /// Display output character-by-character as it's generated
     #[arg(short, long)]
     characters: bool,
+
+    /// Path to write output to; if omitted, will write to STDOUT
+    #[arg(short, long)]
+    output: Option<PathBuf>,
 
     /// Path to read input text from
     input: PathBuf,
@@ -35,7 +35,7 @@ fn main() -> std::io::Result<()> {
     let output = hay.generate_output(args.length, args.sequence, args.characters);
 
     if args.characters {
-        print!("\n");
+        println!();
     } else {
         println!("{output}");
     }
