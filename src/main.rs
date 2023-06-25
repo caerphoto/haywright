@@ -1,14 +1,20 @@
 mod hay;
 
-use std::{fs::{read_to_string, write}, path::PathBuf};
+use std::{
+    fs::{read_to_string, write},
+    ops::RangeInclusive,
+    path::PathBuf,
+};
 use crate::hay::Hay;
 use clap::Parser;
+
+const SEQ_RANGE: RangeInclusive<usize> = 1..=100;
 
 #[derive(Parser)]
 struct Args {
 
     /// Length of sequence-matching string.
-    #[arg(short, long, default_value_t = 5, value_parser = clap::value_parser!(u32).range(1..=100))]
+    #[arg(short, long, default_value_t = 5, value_parser = seq_in_range)]
     sequence: usize,
 
     /// Length of output.
@@ -43,4 +49,15 @@ fn main() -> std::io::Result<()> {
     }
 
     Ok(())
+}
+
+fn seq_in_range(s: &str) -> Result<usize, String> {
+    let seq: usize = s
+        .parse()
+        .map_err(|_| format!("`{s}` isn't a number"))?;
+    if SEQ_RANGE.contains(&seq) {
+        Ok(seq)
+    } else {
+        Err(format!("sequence length not in range {}-{}", SEQ_RANGE.start(), SEQ_RANGE.end()))
+    }
 }
