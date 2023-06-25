@@ -31,7 +31,12 @@ Note that the size of the input affects how long it takes to generate output. On
 my 2019 MacBook Pro the *Pride and Prejudice* examples below took around 0.8s to
 generate based on a 726KB input.
 
-TODO: actually write output to the given path(!)
+## TODO:
+
+* actually write output to the given path(!)
+
+* move generator stuff into its own crate (& possibly repo?), for easier use in
+  other programs
 
 ## Example output
 
