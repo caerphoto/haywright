@@ -1,11 +1,9 @@
 # Haywright
 
-I random text generator based on the work of Brian Hayes.
+A random text generator based on the work of Brian Hayes in his Computer
+Recreations article in the November 1983 edition of Scientific American:
 
-TODO:
+https://www.jstor.org/stable/24969024
+http://bit-player.org/wp-content/extras/bph-publications/SciAm-1983-11-Hayes-drivel.pdf
 
-* Allow command-line params to specify length of output and size of comparison groups.
-
-* Maybe unify the two methods a bit, since they more or less do the same thing.
-
-* Move generator stuff into a module to minimise public API.
+See `haywright --help` for usage instructions.
