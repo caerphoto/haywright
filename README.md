@@ -41,7 +41,7 @@ generate based on a 726KB input.
 
 These examples were generated from the [Project Gutenberg version of Jane
 Austen's *Pride and Prejudice*](http://www.gutenberg.org/ebooks/1342). The source
-was cleaned up a bit to remove the usual Gutenberg paraphenalia, as well as
+was cleaned up a bit to remove the usual Gutenberg paraphernalia, as well as
 chapter markers and other non-prose things. Each is 1,000 characters in length.
 
 ### Sequence length 1
