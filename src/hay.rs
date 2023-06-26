@@ -98,21 +98,33 @@ impl Hay {
                 freq_table[table_idx] += 1;
             }
 
-            let mut n: usize = max(1, rng.gen_range(0..freq_table.iter().sum()));
-            let mut idx = 0;
-            for &freq in freq_table.iter() {
-                n = n.saturating_sub(freq);
-                if n > 0 {
-                    idx += 1;
+            let sum: usize = freq_table.iter().sum();
+            if sum == 0 {
+                if output.chars().count() > seq_len {
+                    output.pop();
+                    continue;
+                } else {
+                    break;
                 }
             }
-            let new_char = char_idx_map.char_at(idx);
-            output.push(new_char);
-            if live {
-                print!("{new_char}");
-                let _ = io::stdout().flush();
+
+            let mut n: usize = max(1, rng.gen_range(0..sum));
+            if let Some(idx) = freq_table.iter().enumerate().find_map(|(i, &freq)| {
+                n = n.saturating_sub(freq);
+                if n == 0 {
+                    Some(i)
+                } else {
+                    None
+                }
+            }) {
+                let new_char = char_idx_map.char_at(idx);
+                output.push(new_char);
+                if live {
+                    print!("{new_char}");
+                    let _ = io::stdout().flush();
+                }
+                current_len += 1;
             }
-            current_len += 1;
         }
 
         output
