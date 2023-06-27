@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 rand = "0.8"
 clap = { version = "4.3.8", features = ["derive"] }
+memchr = "2.5"

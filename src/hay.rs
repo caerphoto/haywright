@@ -52,6 +52,7 @@ impl CharIdxMap {
 
 pub struct Hay {
     text: String,
+    char_idx_map: CharIdxMap,
 }
 
 impl Hay {
@@ -59,32 +60,32 @@ impl Hay {
     pub fn new(input_text: &str) -> Self {
         Self {
             text: String::from(input_text),
+            char_idx_map: CharIdxMap::new(input_text),
         }
     }
 
     /// Generate random output based on the stored input.
     pub fn generate_output(&self, count: usize, seq_len: usize, live: bool) -> String {
         let input = &self.text;
+        let input_bytes = input.as_bytes();
         let mut output = String::with_capacity(count);
 
         let mut current_len: usize = 0;
-        let char_idx_map = CharIdxMap::new(input);
-        let mut freq_table: Vec<usize> = vec![0; 256]; // ASCII plus some room for some common
+        let mut freq_table: Vec<usize> = vec![0; 256]; // ASCII plus some room for some common chars
 
         let mut rng = thread_rng();
         let initial_seq_start: usize = rng.gen_range(0..input.chars().count() - seq_len);
         let initial_str: String = Hay::get_range(input, initial_seq_start, seq_len);
         output.push_str(&initial_str);
 
-
         while current_len < count {
             freq_table.fill(0);
             let seq = Hay::get_seq(&output, seq_len);
 
             // Count frequencies of characters that follow matches.
-            for (idx, _) in input.match_indices(&seq) {
+            for idx in memchr::memmem::find_iter(input_bytes, &seq) {
                 let Some(next_char) = input[idx..].chars().nth(seq_len) else { continue };
-                let table_idx = char_idx_map.index_for(next_char);
+                let table_idx = self.char_idx_map.index_for(next_char);
                 freq_table[table_idx] += 1;
             }
 
@@ -111,7 +112,7 @@ impl Hay {
                 }
                 idx += 1;
             }
-            let new_char = char_idx_map.char_at(idx);
+            let new_char = self.char_idx_map.char_at(idx);
             output.push(new_char);
             if live {
                 print!("{new_char}");
@@ -133,10 +134,10 @@ impl Hay {
             .collect()
     }
 
-    /// Returns a string collected from the last `len` chars of `output`.
-    fn get_seq(output: &str, len: usize) -> String {
+    /// Returns a 'string' collected from the last `len` chars of `output`.
+    fn get_seq(output: &str, len: usize) -> Vec<u8> {
         let output_len = output.chars().count();
-        Hay::get_range(output, output_len - len, len)
+        Hay::get_range(output, output_len - len, len).as_bytes().to_vec()
     }
 }
 
