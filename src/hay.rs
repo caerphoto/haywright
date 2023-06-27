@@ -67,7 +67,6 @@ impl Hay {
     /// Generate random output based on the stored input.
     pub fn generate_output(&self, count: usize, seq_len: usize, live: bool) -> String {
         let input = &self.text;
-        let input_bytes = input.as_bytes();
         let mut output = String::with_capacity(count);
 
         let mut current_len: usize = 0;
@@ -83,7 +82,7 @@ impl Hay {
             let seq = Hay::get_seq(&output, seq_len);
 
             // Count frequencies of characters that follow matches.
-            for idx in memchr::memmem::find_iter(input_bytes, &seq) {
+            for idx in memchr::memmem::find_iter(input.as_bytes(), &seq) {
                 let Some(next_char) = input[idx..].chars().nth(seq_len) else { continue };
                 let table_idx = self.char_idx_map.index_for(next_char);
                 freq_table[table_idx] += 1;
@@ -125,7 +124,7 @@ impl Hay {
     }
 
     /// Returns a string of `count` chars starting at the given `start` index, collected from the
-    /// given input.
+    /// given input. Note that this operates on *characters*, not *bytes*.
     fn get_range(s: &str, start: usize, count: usize) -> String {
         s
             .chars()

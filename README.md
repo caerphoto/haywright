@@ -26,11 +26,24 @@ option. Assuming the source text is written in a natural language:
 
 See below for some example output.
 
-See `haywright --help` for usage instructions.
+## Usage
+`$ haywright [OPTIONS] <INPUT>`
 
-Note that the size of the input affects how long it takes to generate output. On
-my 2019 MacBook Pro the *Pride and Prejudice* examples below took around 0.8s to
-generate based on a 726KB input.
+### Arguments
+`<INPUT>`: Path to read input text from
+
+### Options
+* `-s, --sequence <SEQUENCE>`:  Length of sequence-matching string [default: 5]
+* `-l, --length <LENGTH>`:      Length of output [default: 1000]
+* `-c, --characters`:           Display output character-by-character as it's generated. Has no effect if `-o` is specified
+* `-o, --output <OUTPUT>`:      Path to write output to. If omitted, will write to STDOUT
+* `-h, --help`:                 Print help
+
+Note that the size of the input affects how long it takes to generate output,
+but even on my 2019 MacBook Pro the *Pride and Prejudice* examples below only
+took around 5ms each to generate based on a 726KB input. The speed largely comes
+from the use of the [memchr crate](https://github.com/BurntSushi/memchr), which
+has much faster substring matching functions than the Rust standard library.
 
 ## TODO:
 
