@@ -8,14 +8,14 @@ use std::{
 use crate::hay::Hay;
 use clap::Parser;
 
-const SEQ_RANGE: RangeInclusive<u8> = 1..=100;
+const SEQ_RANGE: RangeInclusive<u8> = 1..=10;
 
 #[derive(Parser)]
 struct Args {
 
     /// Length of sequence-matching string.
-    #[arg(short, long = "sequence", default_value_t = 5, value_parser = seq_in_range)]
-    sequence_length: u8,
+    #[arg(short, long = "sequence", value_parser = seq_in_range)]
+    sequence_length: Option<u8>,
 
     /// Use words instead of characters as tokens.
     #[arg(short, long = "words", default_value_t = false)]
@@ -36,7 +36,10 @@ struct Args {
 fn main() -> std::io::Result<()> {
     let args = Args::parse();
     let input = read_to_string(args.input)?;
-    let hay = Hay::new(&input, args.sequence_length, args.word_tokens);
+    let sequence_length = if let Some(len) = args.sequence_length {
+        len
+    } else if args.word_tokens { 2 } else { 5 };
+    let hay = Hay::new(&input, sequence_length, args.word_tokens);
 
     let output = hay.generate_output(args.length);
 
