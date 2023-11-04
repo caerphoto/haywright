@@ -247,35 +247,46 @@ impl Hay {
                 freq_table[table_idx] += 1;
             }
 
-            let sum: usize = freq_table.iter().sum();
-
-            // This can happen when there is only a single instance of a character in the whole
-            // input.
-            if sum == 0 {
-                if output.chars().count() > seq_len {
+            match self.pick_random_char(&freq_table, &output, &mut rng) {
+                Ok(Some(new_char)) => {
+                    output.push(new_char);
+                    current_len += 1;
+                },
+                Ok(None) => {
                     output.pop();
                     continue;
-                } else {
-                    break;
-                }
+                },
+                Err(_) => break,
             }
-
-            // Pick a random next character, biased by frequency.
-            let mut n: usize = max(1, rng.gen_range(0..sum));
-            let mut idx = 0;
-            for &freq in freq_table.iter() {
-                n = n.saturating_sub(freq);
-                if n == 0 {
-                    break
-                }
-                idx += 1;
-            }
-            let new_char = self.char_idx_map.char_at(idx);
-            output.push(new_char);
-            current_len += 1;
         }
 
         output
+    }
+
+    fn pick_random_char(&self, freq_table: &[usize], output: &str, rng: &mut ThreadRng) -> Result<Option<char>, ()> {
+        let sum: usize = freq_table.iter().sum();
+
+        // This can happen when there is only a single instance of a character in the whole
+        // input.
+        if sum == 0 {
+            if output.chars().count() > self.seq_len {
+                return Ok(None);
+            } else {
+                return Err(());
+            }
+        }
+
+        // Pick a random next character, biased by frequency.
+        let mut n: usize = max(1, rng.gen_range(0..sum));
+        let mut idx = 0;
+        for &freq in freq_table.iter() {
+            n = n.saturating_sub(freq);
+            if n == 0 {
+                break;
+            }
+            idx += 1;
+        }
+        Ok(Some(self.char_idx_map.char_at(idx)))
     }
 
     /// Returns a string of `count` chars starting at the given `start` index, collected from the

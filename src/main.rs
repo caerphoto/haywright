@@ -12,7 +12,6 @@ const SEQ_RANGE: RangeInclusive<u8> = 1..=10;
 
 #[derive(Parser)]
 struct Args {
-
     /// Length of sequence-matching string.
     #[arg(short, long = "sequence", value_parser = seq_in_range)]
     sequence_length: Option<u8>,
